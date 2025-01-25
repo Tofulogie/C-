@@ -83,7 +83,7 @@
     </div>
 
     <script>
-        const players = [
+        let players = [
             { name: '海盗船长', matches: [], netWins: 0 },
             { name: 'Sai', matches: [], netWins: 0 },
             { name: '兔谦', matches: [], netWins: 0 },
@@ -109,6 +109,17 @@
             { name: 'MPS', matches: [], netWins: 0 },
             { name: '老鸡', matches: [], netWins: 0 }
         ];
+
+        function loadPlayersData() {
+            const savedData = localStorage.getItem('playersData');
+            if (savedData) {
+                players = JSON.parse(savedData);
+            }
+        }
+
+        function savePlayersData() {
+            localStorage.setItem('playersData', JSON.stringify(players));
+        }
 
         function initializePlayers() {
             const playerSelect = document.getElementById('playerSelect');
@@ -136,6 +147,7 @@
             const winCount = player.matches.filter(match => match === 1).length;
             player.winRate = ((winCount / player.matches.length) * 100).toFixed(2);
 
+            savePlayersData(); // Save data after each match result is added
             updateTable();
             document.getElementById('matchResult').value = '';
         }
@@ -159,7 +171,10 @@
             });
         }
 
+        // Load players' data when the page is loaded
+        loadPlayersData();
         initializePlayers();
     </script>
 </body>
 </html>
+
