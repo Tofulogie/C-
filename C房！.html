@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match Score Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f8f8f8;
+            color: #555;
+        }
+        button, input {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        input {
+            width: calc(100% - 22px);
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Match Score Tracker</h1>
+        <table id="scoreTable">
+            <thead>
+                <tr>
+                    <th>Player</th>
+                    <th>Matches</th>
+                    <th>Win Rate (%)</th>
+                    <th>Net Wins</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dynamic rows will be added here -->
+            </tbody>
+        </table>
+        <h2>Add Match Result</h2>
+        <select id="playerSelect">
+            <!-- Predefined players will be listed here -->
+        </select>
+        <input type="number" id="matchResult" placeholder="Enter match result (1 or -1)" required>
+        <button onclick="addMatchResult()">Add Match Result</button>
+    </div>
+
+    <script>
+        const players = [
+            { name: '海盗船长', matches: [], netWins: 0 },
+            { name: 'Sai', matches: [], netWins: 0 },
+            { name: '兔谦', matches: [], netWins: 0 },
+            { name: '痔疮', matches: [], netWins: 0 },
+            { name: '川神', matches: [], netWins: 0 },
+            { name: '老朱', matches: [], netWins: 0 },
+            { name: '志神', matches: [], netWins: 0 },
+            { name: '蟑螂恶霸', matches: [], netWins: 0 },
+            { name: '冷神', matches: [], netWins: 0 },
+            { name: '杀猪刀', matches: [], netWins: 0 },
+            { name: '杀神', matches: [], netWins: 0 },
+            { name: '冰山', matches: [], netWins: 0 },
+            { name: 'letter神', matches: [], netWins: 0 },
+            { name: '健身小子', matches: [], netWins: 0 },
+            { name: '刘和珍君', matches: [], netWins: 0 },
+            { name: 'duo神', matches: [], netWins: 0 },
+            { name: '亚军', matches: [], netWins: 0 },
+            { name: 'waa', matches: [], netWins: 0 },
+            { name: '陆河', matches: [], netWins: 0 },
+            { name: '大漠孤狼', matches: [], netWins: 0 },
+            { name: '安非他命', matches: [], netWins: 0 },
+            { name: 'FJ', matches: [], netWins: 0 },
+            { name: 'MPS', matches: [], netWins: 0 },
+            { name: '老鸡', matches: [], netWins: 0 }
+        ];
+
+        function initializePlayers() {
+            const playerSelect = document.getElementById('playerSelect');
+            players.forEach((player, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = player.name;
+                playerSelect.appendChild(option);
+            });
+            updateTable();
+        }
+
+        function addMatchResult() {
+            const playerIndex = parseInt(document.getElementById('playerSelect').value);
+            const matchResult = parseInt(document.getElementById('matchResult').value);
+
+            if (isNaN(playerIndex) || isNaN(matchResult) || ![1, -1].includes(matchResult)) {
+                alert('Please select a player and enter a valid match result (1 or -1).');
+                return;
+            }
+
+            const player = players[playerIndex];
+            player.matches.push(matchResult);
+            player.netWins = player.matches.reduce((sum, match) => sum + match, 0);
+            const winCount = player.matches.filter(match => match === 1).length;
+            player.winRate = ((winCount / player.matches.length) * 100).toFixed(2);
+
+            updateTable();
+            document.getElementById('matchResult').value = '';
+        }
+
+        function updateTable() {
+            const tableBody = document.getElementById('scoreTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = '';
+
+            players.forEach(player => {
+                const row = tableBody.insertRow();
+
+                const cell1 = row.insertCell(0);
+                const cell2 = row.insertCell(1);
+                const cell3 = row.insertCell(2);
+                const cell4 = row.insertCell(3);
+
+                cell1.innerText = player.name;
+                cell2.innerText = player.matches.length;
+                cell3.innerText = player.winRate || '0.00';
+                cell4.innerText = player.netWins;
+            });
+        }
+
+        initializePlayers();
+    </script>
+</body>
+</html>
